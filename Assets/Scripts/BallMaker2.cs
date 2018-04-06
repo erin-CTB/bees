@@ -24,12 +24,14 @@ public class BallMaker2 : MonoBehaviour {
 	public Text notifier;
 
 
+
 	// Use this for initialization
 	void Start () {
 		diff = new Vector3(.1f,0,0);
 		totalFlowers = 6;
 		//currentLevel = DND.GetComponent<DontDestroyOnLoad> ().currentLevel;
 		currentLevel = keeper.Instance.currentLevel;
+		createHeight = 0;
 	}
 
 	public void CreateBall(Vector3 atPosition, GameObject dingdong)
@@ -39,6 +41,7 @@ public class BallMaker2 : MonoBehaviour {
 			
 			ballGO.tag = "flower";
 			ballGO.transform.RotateAround (ballGO.transform.position, new Vector3 (0, 1, 0), Random.Range (0, 360));
+			Debug.Log (atPosition.x + " " + atPosition.y + " " + atPosition.z);
 			//mover.GetComponent<BallMover> ().flowers [currentFlower] = ballGO;
 
 		}
@@ -69,7 +72,8 @@ public class BallMaker2 : MonoBehaviour {
 				if (hitResults.Count > 0) {
 					foreach (var hitResult in hitResults) {
 						Vector3 position = UnityARMatrixOps.GetPosition (hitResult.worldTransform);
-						Vector3 placeLevel = new Vector3 (position.x, position.y + createHeight, position.z);
+						//add createheight to the y below
+						Vector3 placeLevel = new Vector3 (position.x, position.y, position.z);
 						levelPosition = placeLevel;
 						//notifier.text = "Ground Tapped "+currentLevel;
 						//beeCreator.GetComponent<ModeSwitcher2> ().levelator (placeLevel, 3, 6);

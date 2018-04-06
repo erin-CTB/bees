@@ -61,6 +61,8 @@ public class ModeSwitcher2 : MonoBehaviour {
 	public GameObject DND;
 	public Text levelText;
 
+	public Vector3[] flowerLocations;
+
 
 
 	// Use this for initialization
@@ -77,7 +79,7 @@ public class ModeSwitcher2 : MonoBehaviour {
 		parentHolder.tag = "bee";
 		//placement (numberOfObjects);
 		createBeesCalled = false;
-	
+		flowerLocations = new Vector3[15];
 
 
 	}
@@ -253,6 +255,8 @@ public class ModeSwitcher2 : MonoBehaviour {
 		for (int i = 0; i < totalFlowers / 3; i++) {
 			for (int p = 0; p < 3; p++) {
 				creator.GetComponent<BallMaker2> ().CreateBall (flowerPos, creator.GetComponent<BallMaker2> ().flower1);
+				flowerLocations [p+i] = flowerPos;
+				Debug.Log ("flowerposition index "+flowerPos);
 				flowerPos = flowerPos + creator.GetComponent<BallMaker2> ().diff;
 			}
 			flowerPos = pos- new Vector3 (.1f,-.1f, .12f*(i));
@@ -267,7 +271,7 @@ public class ModeSwitcher2 : MonoBehaviour {
 	public void reset(){
 		//
 		Debug.Log("lvl: "+keeper.Instance.currentLevel);
-		ResetScene ();
+		//ResetScene ();
 		if (keeper.Instance.currentLevel < 5) {
 			keeper.Instance.nextLevel();
 			SceneManager.LoadScene ("youGotEm");
