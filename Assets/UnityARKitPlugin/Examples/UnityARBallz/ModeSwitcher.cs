@@ -27,13 +27,14 @@ public class ModeSwitcher : MonoBehaviour {
 
 	void OnGUI()
 	{
+		/*
 		string modeString = appMode == 0 ? "MAKE" : "BREAK";
 		if (GUI.Button(new Rect(Screen.width -150.0f, 0.0f, 150.0f, 100.0f), modeString))
 		{
 			appMode = (appMode + 1) % 2;
 			EnableBallCreation (appMode == 0);
 		}
-
+*/
 	}
 
 }

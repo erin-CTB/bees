@@ -15,6 +15,7 @@ public class IntroController : MonoBehaviour {
 		
 	}
 	public void clickMe(){
-		SceneManager.LoadScene ("Beez"); 
+		//SceneManager.LoadScene ("introStory"); 
+		SceneManager.LoadScene ("Garden"); 
 	}
 }

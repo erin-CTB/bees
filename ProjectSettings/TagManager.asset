@@ -10,6 +10,8 @@ TagManager:
   - flower
   - island
   - beeParent
+  - shovel
+  - panel
   layers:
   - Default
   - TransparentFX

@@ -23,8 +23,8 @@ public class ModeSwitcher2 : MonoBehaviour {
 	public GameObject objectToPlace; // GameObject to place - bee
 	public GameObject island;
 	public GameObject flower;
-	private int terrainWidth; // terrain size (x)
-	private int terrainLength; // terrain size (z)
+	private float terrainWidth; // terrain size (x)
+	private float terrainLength; // terrain size (z)
 	private int terrainPosX; // terrain position x
 	private int terrainPosZ; // terrain position z
 	public GameObject[] gems;
@@ -35,27 +35,27 @@ public class ModeSwitcher2 : MonoBehaviour {
 	private GameObject[] hives;
 	private float centerZ = 0;
 	private float centerX = 0;
-	private Vector3 myPosition;
+	//private Vector3 myPosition;
 
 	public int currentBee = 0;
 	public Stack<GameObject> beeStack = new Stack<GameObject> ();
 
 	public float hSliderValue = 0.0F;
-	private int grabValue = 0;
+	//private int grabValue = 0;
 	private int totalBees = 0;
 
 	private GameObject parentHolder;
 	public Text caught;
 	public Text left;
 
-	private int level = 1;
+	//private int level = 1;
 	public bool createBeesCalled;
 
 	public int currentLevel;
 
 	public GameObject creator;
 	public GameObject mover;
-	private Vector3 localLevelPosition;
+	public Vector3 localLevelPosition;
 
 	public int maxTaps;
 	public GameObject DND;
@@ -63,6 +63,10 @@ public class ModeSwitcher2 : MonoBehaviour {
 
 	public Vector3[] flowerLocations;
 
+	public Text maxer;
+	public Text dope;
+
+	public GameObject alert;
 
 
 	// Use this for initialization
@@ -71,15 +75,16 @@ public class ModeSwitcher2 : MonoBehaviour {
 		setMode (true);
 		
 		// terrain size x
-		terrainWidth = 3;
+		terrainWidth = .5f;
 		// terrain size z
-		terrainLength = 3;
+		terrainLength =.5f;
 
 		parentHolder = new GameObject("BeeParent");
 		parentHolder.tag = "bee";
 		//placement (numberOfObjects);
 		createBeesCalled = false;
 		flowerLocations = new Vector3[15];
+		keeper.Instance.nextLevel ();
 
 
 	}
@@ -87,14 +92,15 @@ public class ModeSwitcher2 : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		myPosition = Camera.main.gameObject.transform.position;
-		localLevelPosition = creator.GetComponent<BallMaker2> ().levelPosition;
-		grabValue = Mathf.RoundToInt(hSliderValue * 100);
+		//myPosition = Camera.main.gameObject.transform.position;
+
+		//grabValue = Mathf.RoundToInt(hSliderValue * 100);
 		left.text = ((beeStack.Count).ToString ()+" bees left");
 		//Debug.Log ("ALERT: "+createBeesCalled);
-
+		dope.text = "are you resetting: "+beeStack.Count+ " "+ createBeesCalled;
 		if (beeStack.Count==0 && createBeesCalled==true){
 			//level completed... go to next level!
+			dope.text = "Reset called...";
 			reset();
 		}
 
@@ -104,18 +110,26 @@ public class ModeSwitcher2 : MonoBehaviour {
 		} else {
 			caught.text = ((totalBees - beeStack.Count) + " bees caught");
 		}
-		levelText.text = keeper.Instance.currentLevel.ToString();
-
+		levelText.text = (keeper.Instance.currentLevel).ToString();
 	}
 
-
+	/*
 	public void ResetScene() {
 		ARKitWorldTrackingSessionConfiguration sessionConfig = new ARKitWorldTrackingSessionConfiguration ( UnityARAlignment.UnityARAlignmentGravity, UnityARPlaneDetection.Horizontal);
 		UnityARSessionNativeInterface.GetARSessionNativeInterface().RunWithConfigAndOptions(sessionConfig, UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking);
 	}
 
-
-
+*/
+	public void ResetScene() {
+		// config is the ARKitWorldTrackingSessionConfiguration I used when the app started
+		/*
+		UnityARSessionNativeInterface.GetARSessionNativeInterface().RunWithConfigAndOptions(config, UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking);
+*/
+}
+	public void loadScene(){
+		//
+		SceneManager.LoadScene("Reward");
+	}
 
 
 	//createBees
@@ -124,51 +138,32 @@ public class ModeSwitcher2 : MonoBehaviour {
 		for ( int i = 0; i < mover.GetComponent<BallMover> ().flowerTaps.Length; i++)
 		{
 			mover.GetComponent<BallMover> ().flowerTaps[i] = 0;
+			//Debug.Log ("reset flowerTap" + mover.GetComponent<BallMover> ().flowerTaps [i]);
 		}
 
 		createBeesCalled = true;
 		totalBees = boop;
-		//add all bees with "caught" or "bees" tag into the gem array
-		/*
-		gems = GameObject.FindGameObjectsWithTag ("caught");
-		//destroy all caught bees
-		for (int i = 0; i < gems.Length; i++) {
-			Destroy (gems [i]);
-			Debug.Log ("ALERT: caught bees destroyed");
-		}
-		beesCreated = GameObject.FindGameObjectsWithTag ("bee");
-		Debug.Log ("BEESCREATED LENGTH: "+beesCreated.Length);
-		for (int i = 0; i < beesCreated.Length; i++) {
-			Destroy(beesCreated[i]);
-			Debug.Log ("ALERT: uncaught bees destroyed");
-		}
 
-		//reset number of bees caught in the scene to 0
-		currentBee = 0;
-		beeStack.Clear ();
-	
-		currentObjects = 0;
-*/
 		hives = GameObject.FindGameObjectsWithTag ("island");
 
 		if (hives.Length == 0) {
 			//float centerX = 0;
 			//float centerZ = 0;
-			Debug.Log("are there hives?"+hives.Length);
+			//Debug.Log("are there hives?"+hives.Length);
 		} else {
 			centerX = hives [0].gameObject.transform.position.x;
 			centerZ = hives [0].gameObject.transform.position.z;
-			Debug.Log("are there hives?"+hives.Length);
+			//Debug.Log("are there hives?"+hives.Length);
 		}
 
 		for (int i =0; i<boop; i++){
 			//
 			float posx = Random.Range (centerX-terrainWidth, centerX + terrainWidth);
 			float posz = Random.Range (centerZ-terrainLength, centerZ + terrainLength);
-			GameObject newObject = (GameObject)Instantiate (objectToPlace, new Vector3 (posx, 1, posz), Quaternion.identity);
+			GameObject newObject = (GameObject)Instantiate (objectToPlace, new Vector3 (posx, .1f, posz), Quaternion.identity);
 
-			GameObject parental = (GameObject)Instantiate (parentHolder,new Vector3 (posx, 1, posz), Quaternion.identity);
-			Debug.Log("PUSH!");
+			GameObject parental = (GameObject)Instantiate (parentHolder,new Vector3 (posx, .1f, posz), Quaternion.identity);
+			//Debug.Log("PUSH!");
 			newObject.transform.SetParent(parental.transform);
 			newObject.transform.RotateAround (newObject.transform.position, new Vector3 (0, 1, 0), Random.Range (0, 360));
 			parental.tag = "beeParent";
@@ -179,61 +174,96 @@ public class ModeSwitcher2 : MonoBehaviour {
 		//mover.GetComponent<BallMover> ().flowers = new GameObject[0];
 		//System.Array.Clear(mover.GetComponent<BallMover> ().flowers,0, mover.GetComponent<BallMover> ().flowers.Length);
 
-		Debug.Log("All bees created!");
+		//Debug.Log("All bees created!");
 
 	}
 
-	public void setLevel(int x){
+	public void setLevel(){
 		//
-		//reset();
-		currentLevel = x;
-		//currentLevel = DND.GetComponent<DontDestroyOnLoad> ().currentLevel;
-		//Debug.Log("DND Current Level: "+DND.GetComponent<DontDestroyOnLoad> ().currentLevel);
-		//currentLevel = DND.GetComponent<DontDestroyOnLoad> ().currentLevel;
+		localLevelPosition = creator.GetComponent<BallMaker2> ().levelPosition;
+		currentLevel = keeper.Instance.currentLevel;
+		alert.gameObject.SetActive (false);
 		setLevels ();
 
 	}
 
 	void setLevels(){
 		//destroy all islands, bees, flowers and reset which flowers are in the field, and which bees are in the stack
-		Debug.Log ("LEVEL" + currentLevel);
+		//Debug.Log ("LEVEL" + keeper.Instance.currentLevel.ToString());
 		DestroyGameObjectsWithTag ("island");
 		DestroyGameObjectsWithTag ("beeParent");
 		DestroyGameObjectsWithTag ("flower");
 		beeStack.Clear ();
 
-		switch(currentLevel)
-		{
-
-		//
-		case 0: break;
-		case 1:
-			//creator.GetComponent<BallMaker2> ().levelator (localLevelPosition, 3, 6);
-			levelator (localLevelPosition, 3, 6);
-			break;
-		case 2:
-			//creator.GetComponent<BallMaker2> ().levelator (localLevelPosition,6, 12);
-			levelator (localLevelPosition,6, 12);
-			break;
-		case 3:
-			//creator.GetComponent<BallMaker2> ().levelator (localLevelPosition, 9, 18);
-			levelator (localLevelPosition, 9, 18);
-			break;
-		case 4:
-			//creator.GetComponent<BallMaker2> ().levelator (localLevelPosition,12, 24);
-			levelator (localLevelPosition,12, 24);
-			break;
-		case 5:
-			//creator.GetComponent<BallMaker2> ().levelator (localLevelPosition,15, 30);
-			levelator (localLevelPosition,15, 30);
-			break;
-		default:
-			break;
-		}
+		//create flowers, bees and island
+		levelator (localLevelPosition, keeper.Instance.lvlFlowers[currentLevel], keeper.Instance.lvlBees[currentLevel]);
 
 		Debug.Log ("level set and total bees: " + totalBees);
 		Debug.Log ("beestack count: " + beeStack.Count);
 
+	}
+
+	public void levelator(Vector3 pos, int totalFlowers, int totalBees){
+		//set flower to be placed
+		GameObject currentFlower = keeper.Instance.currentFlower;
+
+		//set max taps
+		maxTaps = totalBees/totalFlowers;
+		maxer.text = "Max Taps: " + maxTaps;
+		Debug.Log ("max taps: "+maxTaps);
+
+		//set island location
+		Vector3 flowerPos= pos+ new Vector3(0,-0.1f,0);
+
+		//create island
+		creator.GetComponent<BallMaker2> ().CreateBall(pos, creator.GetComponent<BallMaker2> ().island);
+
+		//set first flower location
+		flowerPos = flowerPos - new Vector3 (.1f, -.24f, -.1f);
+
+		//create total flowers in array
+		for (int i = 0; i < totalFlowers / 3; i++) {
+			for (int p = 0; p < 3; p++) {
+				creator.GetComponent<BallMaker2> ().CreateBall (flowerPos, currentFlower);
+				flowerLocations [p+i] = flowerPos;
+				//Debug.Log ("flowerposition index "+flowerPos);
+				flowerPos = flowerPos + creator.GetComponent<BallMaker2> ().diff;
+			}
+			flowerPos = pos- new Vector3 (.1f,-.14f, .12f*(i));
+		}
+
+		Debug.Log ("total bees to be created: " + totalBees);
+		setMode (false);
+
+		//add bees
+		placement (totalBees);
+	} 
+
+	public void reset(){
+		//
+		Debug.Log("lvl: "+keeper.Instance.currentLevel);
+		//ResetScene ();
+
+		if(keeper.Instance.currentLevel==10){
+			//
+			Debug.Log ("MOD: "+ keeper.Instance.currentLevel % 4);
+			SceneManager.LoadScene("Reward");
+		}
+		else if (keeper.Instance.currentLevel%3==0){
+			//
+			SceneManager.LoadScene("Reward");
+		}
+		else {
+			//Debug.Log ("MOD: "+ keeper.Instance.currentLevel % 4);
+			//keeper.Instance.nextLevel();
+			SceneManager.LoadScene ("youGotEm");
+		}
+	}
+
+	public void setMode(bool enable){
+		//
+		creator.SetActive (enable);
+		mover.SetActive (!enable);
 	}
 
 	public static void DestroyGameObjectsWithTag(string tag)
@@ -243,50 +273,14 @@ public class ModeSwitcher2 : MonoBehaviour {
 			GameObject.Destroy(target);
 		}
 	}
-
-	public void levelator(Vector3 pos, int totalFlowers, int totalBees){
-
-		maxTaps = totalBees/totalFlowers;
-		Debug.Log ("max taps: "+maxTaps);
-		Vector3 flowerPos= pos+ new Vector3(0,0.1f,0);
-		creator.GetComponent<BallMaker2> ().CreateBall(pos, creator.GetComponent<BallMaker2> ().island);
-		flowerPos = flowerPos - new Vector3 (.1f, 0, -.1f);
-
-		for (int i = 0; i < totalFlowers / 3; i++) {
-			for (int p = 0; p < 3; p++) {
-				creator.GetComponent<BallMaker2> ().CreateBall (flowerPos, creator.GetComponent<BallMaker2> ().flower1);
-				flowerLocations [p+i] = flowerPos;
-				Debug.Log ("flowerposition index "+flowerPos);
-				flowerPos = flowerPos + creator.GetComponent<BallMaker2> ().diff;
-			}
-			flowerPos = pos- new Vector3 (.1f,-.1f, .12f*(i));
-		}
-		//GameObject[] sizeofDaBeez = GameObject.FindGameObjectsWithTag ("flower");
-		//System.Array.Resize<int>( ref mover.GetComponent<BallMover>().flowers, sizeofDaBeez.Length );
-		Debug.Log ("total bees to be created: " + totalBees);
-		setMode (false);
-		placement (totalBees);
-	} 
-
-	public void reset(){
-		//
-		Debug.Log("lvl: "+keeper.Instance.currentLevel);
-		//ResetScene ();
-		if (keeper.Instance.currentLevel < 5) {
-			keeper.Instance.nextLevel();
-			SceneManager.LoadScene ("youGotEm");
-		}
-		else{
-			//
-			SceneManager.LoadScene("Reward");
-		}
-	}
-
-	public void setMode(bool enable){
-		//
-		creator.SetActive (enable);
-		mover.SetActive (!enable);
-	}
 		
+	public void goTo(){
+		//
+		//SceneManager.LoadScene("youGotEm");
+		keeper.Instance.GetComponent<AudioSource> ().Play ();
+		keeper.Instance.nextLevel();
+		setLevel();
+		Handheld.Vibrate ();
 
+	}
 }

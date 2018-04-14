@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class BallMaker2 : MonoBehaviour {
 
 	public GameObject flower1;
 	public GameObject island;
-	public float createHeight;
+	//public float createHeight;
 	public GameObject beeCreator;
 	public Vector3 diff;
 	public int maxTaps;
@@ -19,19 +18,17 @@ public class BallMaker2 : MonoBehaviour {
 	private int currentFlower;
 	public 	GameObject[] tempArray;
 	//public GameObject DND;
-	private int currentLevel;
-	private bool placed = false;
 	public Text notifier;
+	private float islandHeight;
 
 
 
 	// Use this for initialization
 	void Start () {
 		diff = new Vector3(.1f,0,0);
+		islandHeight = -.3f;
+		levelPosition = new Vector3 (0, islandHeight, 0);
 		totalFlowers = 6;
-		//currentLevel = DND.GetComponent<DontDestroyOnLoad> ().currentLevel;
-		currentLevel = keeper.Instance.currentLevel;
-		createHeight = 0;
 	}
 
 	public void CreateBall(Vector3 atPosition, GameObject dingdong)
@@ -41,8 +38,7 @@ public class BallMaker2 : MonoBehaviour {
 			
 			ballGO.tag = "flower";
 			ballGO.transform.RotateAround (ballGO.transform.position, new Vector3 (0, 1, 0), Random.Range (0, 360));
-			Debug.Log (atPosition.x + " " + atPosition.y + " " + atPosition.z);
-			//mover.GetComponent<BallMover> ().flowers [currentFlower] = ballGO;
+			//Debug.Log (atPosition.x + " " + atPosition.y + " " + atPosition.z);
 
 		}
 		else if (dingdong == island){
@@ -73,17 +69,9 @@ public class BallMaker2 : MonoBehaviour {
 					foreach (var hitResult in hitResults) {
 						Vector3 position = UnityARMatrixOps.GetPosition (hitResult.worldTransform);
 						//add createheight to the y below
-						Vector3 placeLevel = new Vector3 (position.x, position.y, position.z);
+						Vector3 placeLevel = new Vector3 (position.x, islandHeight, position.z);
 						levelPosition = placeLevel;
-						//notifier.text = "Ground Tapped "+currentLevel;
-						//beeCreator.GetComponent<ModeSwitcher2> ().levelator (placeLevel, 3, 6);
-						if (currentLevel < 6) {
-							beeCreator.GetComponent<ModeSwitcher2> ().setLevel (currentLevel);
-						}
-						else{
-							//
-							SceneManager.LoadScene("Reward");
-						}
+						beeCreator.GetComponent<ModeSwitcher2> ().setLevel ();
 						break;
 					}
 

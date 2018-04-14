@@ -9,6 +9,12 @@ EditorBuildSettings:
     path: Assets/Intro.unity
     guid: 9c405b289b81645bc94237c200e643dc
   - enabled: 1
+    path: Assets/Garden.unity
+    guid: 40eaacbd318e74a57b9abac01748f2ce
+  - enabled: 1
+    path: Assets/introStory.unity
+    guid: 80feb6637e2f24e80afdadfa78b7b1dc
+  - enabled: 1
     path: Assets/Beez.unity
     guid: 8628063396e1f4f30b40c26689afabc1
   - enabled: 1

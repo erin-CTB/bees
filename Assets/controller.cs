@@ -38,7 +38,7 @@ public class controller : MonoBehaviour {
 	}
 	void CreateBall(Vector3 atPosition, GameObject dingdong)
 	{
-		GameObject ballGO = Instantiate (dingdong, atPosition, Quaternion.identity);
+		//GameObject ballGO = Instantiate (dingdong, atPosition, Quaternion.identity);
 
 	} 
 	public void createThings(){
